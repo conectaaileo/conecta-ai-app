@@ -1,13 +1,25 @@
 ﻿"use client"
 import { useState } from "react"
 
+// 1. Definimos o formato exato de uma solicitação
+interface Solicitacao {
+  id: number
+  usuario: string
+  item: string
+  datas: string
+  valor: string
+  avatar: string
+}
+
 export default function Solicitacoes() {
-  const [solicitacoes, setSolicitacoes] = useState([
+  // 2. Aplicamos a interface ao useState
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([
     { id: 1, usuario: "Maria Souza", item: "Furadeira Bosch", datas: "10/01 a 12/01", valor: "R$ 50", avatar: "MS" },
     { id: 2, usuario: "Carlos Lima", item: "Câmera Canon", datas: "15/01 a 18/01", valor: "R$ 150", avatar: "CL" },
   ])
 
-  const handleAcao = (id, acao) => {
+  // 3. Tipamos os parâmetros da função (id é número, acao é texto)
+  const handleAcao = (id: number, acao: string) => {
     setSolicitacoes(solicitacoes.filter(s => s.id !== id))
     alert(`Solicitação ${acao === 'aceitar' ? 'aprovada' : 'recusada'} com sucesso!`)
   }

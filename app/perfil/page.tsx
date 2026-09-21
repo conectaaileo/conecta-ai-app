@@ -1,21 +1,32 @@
 ﻿"use client"
 import { useState, useEffect } from "react"
 
+interface DadosUsuario {
+  nome: string
+  email: string
+  telefone: string
+  bio: string
+}
+
 export default function Perfil() {
-  const [modoUsuario, setModoUsuario] = useState("locatario")
+  const [modoUsuario, setModoUsuario] = useState<string>("locatario")
   const [editando, setEditando] = useState(false)
   const [modalUpload, setModalUpload] = useState(false)
   const [modalNovoDoc, setModalNovoDoc] = useState(false)
   const [modalFotoPerfil, setModalFotoPerfil] = useState(false)
-  const [fotoPerfil, setFotoPerfil] = useState(null)
+  
+  // Tipagem correta para aceitar string (base64 da imagem) ou null
+  const [fotoPerfil, setFotoPerfil] = useState<string | null>(null)
   const [novoDocNome, setNovoDocNome] = useState("")
-  const [dados, setDados] = useState({
+  
+  const [dados, setDados] = useState<DadosUsuario>({
     nome: "João Silva",
     email: "belezaemcasa666@gmail.com",
     telefone: "(11) 99999-9999",
     bio: "Usuário verificado da plataforma conectaAI",
   })
-  const [temp, setTemp] = useState(dados)
+  
+  const [temp, setTemp] = useState<DadosUsuario>(dados)
 
   useEffect(() => {
     const modo = localStorage.getItem("modoUsuario")
@@ -25,12 +36,13 @@ export default function Perfil() {
   const salvar = () => { setDados(temp); setEditando(false) }
   const cancelar = () => { setTemp(dados); setEditando(false) }
 
-  const handleFotoPerfil = (e) => {
-    const file = e.target.files[0]
+  // CORREÇÃO PRINCIPAL: Tipagem do evento 'e'
+  const handleFotoPerfil = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setFotoPerfil(reader.result)
+        setFotoPerfil(reader.result as string)
         setModalFotoPerfil(false)
       }
       reader.readAsDataURL(file)
@@ -46,7 +58,7 @@ export default function Perfil() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-2">
-                {modoUsuario === "locatario" ? " Vizinho" : "💼 Tem Tudo"}
+                {modoUsuario === "locatario" ? "👤 Vizinho" : "💼 Tem Tudo"}
               </h1>
               <p className="text-white/90">
                 {modoUsuario === "locatario" 
@@ -106,7 +118,7 @@ export default function Perfil() {
 
         {/* DOCUMENTOS */}
         <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-          <h3 className="text-lg font-bold mb-4"> Documentos Verificados</h3>
+          <h3 className="text-lg font-bold mb-4">📄 Documentos Verificados</h3>
           <div className="space-y-3">
             <div className="flex justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
               <div><p className="font-medium">RG / CPF</p><p className="text-sm text-emerald-700">Verificado</p></div>
@@ -183,4 +195,3 @@ export default function Perfil() {
     </div>
   )
 }
-

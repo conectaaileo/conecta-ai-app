@@ -1,7 +1,22 @@
 ﻿"use client"
 import { useState } from "react"
 
-const mockAlugueis = [
+interface Aluguel {
+  id: number
+  item: string
+  fotos: string[]
+  local: string
+  dataInicio: string
+  dataFim: string
+  status: string
+  valor: number
+  locador: string
+  locatario: string
+  contratoAssinado: boolean
+  termos: string
+}
+
+const mockAlugueis: Aluguel[] = [
   { 
     id: 1, 
     item: "Furadeira Bosch Profissional 500W", 
@@ -19,7 +34,7 @@ const mockAlugueis = [
   { 
     id: 2, 
     item: "Mesa de Centro de Madeira", 
-    fotos: ["🪑", "📷", "📷"],
+    fotos: ["", "📷", "📷"],
     local: "Pinheiros, SP", 
     dataInicio: "2024-12-20", 
     dataFim: "2024-12-25", 
@@ -47,19 +62,19 @@ const mockAlugueis = [
 ]
 
 export default function MeusAlugueis() {
-  const [filtro, setFiltro] = useState("todos")
-  const [expandido, setExpandido] = useState(null)
-  const [assinaturas, setAssinaturas] = useState({})
+  const [filtro, setFiltro] = useState<string>("todos")
+  const [expandido, setExpandido] = useState<number | null>(null)
+  const [assinaturas, setAssinaturas] = useState<Record<number, boolean>>({})
 
   const alugueisAtivos = mockAlugueis.filter(a => a.status === "ativo").length
   const alugueisConcluidos = mockAlugueis.filter(a => a.status === "concluido").length
   const alugueisFiltrados = filtro === "todos" ? mockAlugueis : mockAlugueis.filter(a => a.status === filtro)
 
-  const toggleExpandido = (id) => {
+  const toggleExpandido = (id: number) => {
     setExpandido(expandido === id ? null : id)
   }
 
-  const assinarContrato = (id) => {
+  const assinarContrato = (id: number) => {
     setAssinaturas({...assinaturas, [id]: true})
     alert("✅ Contrato assinado com sucesso!")
   }
@@ -144,7 +159,7 @@ export default function MeusAlugueis() {
                     
                     {/* GALERIA DE FOTOS */}
                     <div className="mb-6">
-                      <h4 className="font-bold text-gray-900 mb-3"> Fotos do Item</h4>
+                      <h4 className="font-bold text-gray-900 mb-3">📷 Fotos do Item</h4>
                       <div className="flex gap-3">
                         {aluguel.fotos.map((foto, idx) => (
                           <div key={idx} className="w-24 h-24 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center text-4xl hover:border-emerald-500 transition cursor-pointer">
@@ -157,7 +172,7 @@ export default function MeusAlugueis() {
                     {/* CONTRATO */}
                     <div className="bg-white rounded-lg border-2 border-emerald-200 p-6 mb-4">
                       <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-bold text-gray-900 text-lg">📄 Contrato de Aluguel</h4>
+                        <h4 className="font-bold text-gray-900 text-lg"> Contrato de Aluguel</h4>
                         {estaAssinado ? (
                           <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
                             ✅ Assinado
@@ -213,7 +228,7 @@ export default function MeusAlugueis() {
 
           {alugueisFiltrados.length === 0 && (
             <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
-              <p className="text-4xl mb-2">📭</p>
+              <p className="text-4xl mb-2"></p>
               <p className="text-gray-600">Nenhum aluguel encontrado.</p>
             </div>
           )}

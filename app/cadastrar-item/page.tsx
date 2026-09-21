@@ -7,8 +7,7 @@ export default function CadastrarItem() {
   const [form, setForm] = useState({ nome: "", categoria: "", preco: "", descricao: "" })
   const [qtdFotos, setQtdFotos] = useState(3)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [e.target.name]: e.target.value })
-  
+const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm({ ...form, [e.target.name]: e.target.value })  
   const handleCategoria = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const cat = e.target.value
     setForm({ ...form, categoria: cat })

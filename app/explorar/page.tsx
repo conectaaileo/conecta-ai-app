@@ -1,12 +1,25 @@
 ﻿"use client"
 import { useState, useEffect } from "react"
 
+// 1. Definimos a estrutura do Item para o TypeScript entender
+interface Item {
+  id: number
+  nome: string
+  preco: string
+  local: string
+  categoria: string
+  parceira: string
+}
+
 export default function Explorar() {
-  const [localizacao, setLocalizacao] = useState(null)
-  const [carregando, setCarregando] = useState(false)
-  const [busca, setBusca] = useState("")
-  const [localBusca, setLocalBusca] = useState("")
-  const [itensFiltrados, setItensFiltrados] = useState([])
+  // 2. Tipamos a localização: pode ser null no início, ou um objeto com lat e lng
+  const [localizacao, setLocalizacao] = useState<{ lat: number; lng: number } | null>(null)
+  const [carregando, setCarregando] = useState<boolean>(false)
+  const [busca, setBusca] = useState<string>("")
+  const [localBusca, setLocalBusca] = useState<string>("")
+  
+  // 3. Tipamos o array para aceitar apenas objetos do tipo Item
+  const [itensFiltrados, setItensFiltrados] = useState<Item[]>([])
 
   const empresasParceiras = [
     { nome: "Quinto Andar", cor: "bg-blue-100 text-blue-800" },
@@ -16,7 +29,7 @@ export default function Explorar() {
     { nome: "AlugaFácil", cor: "bg-pink-100 text-pink-800" },
   ]
 
-  const itensMock = [
+  const itensMock: Item[] = [
     { id: 1, nome: "Furadeira Bosch", preco: "R$ 25/dia", local: "Vila Madalena", categoria: "Ferramentas", parceira: "ToolShare" },
     { id: 2, nome: "Mesa de Centro", preco: "R$ 15/dia", local: "Pinheiros", categoria: "Móveis", parceira: "Quinto Andar" },
     { id: 3, nome: "Câmera Canon", preco: "R$ 50/dia", local: "Jardins", categoria: "Eletrônicos", parceira: "QwenAI" },
@@ -33,8 +46,9 @@ export default function Explorar() {
       setCarregando(false)
       return
     }
+    // 4. Tipamos o parâmetro da geolocalização
     navigator.geolocation.getCurrentPosition(
-      (posicao) => {
+      (posicao: GeolocationPosition) => {
         setLocalizacao({
           lat: posicao.coords.latitude,
           lng: posicao.coords.longitude
@@ -48,7 +62,6 @@ export default function Explorar() {
   const buscarItens = () => {
     let filtrados = itensMock
 
-    // Filtro por busca de texto (nome/categoria)
     if (busca.trim()) {
       const termo = busca.toLowerCase()
       filtrados = filtrados.filter(item => 
@@ -57,7 +70,6 @@ export default function Explorar() {
       )
     }
 
-    // Filtro por localização manual
     if (localBusca.trim()) {
       const local = localBusca.toLowerCase()
       filtrados = filtrados.filter(item => 
@@ -73,7 +85,8 @@ export default function Explorar() {
     setItensFiltrados(itensMock)
   }, [])
 
-  const getParceiraCor = (nome) => {
+  // 5. Tipamos o parâmetro 'nome' como string
+  const getParceiraCor = (nome: string) => {
     const parceira = empresasParceiras.find(p => p.nome === nome)
     return parceira ? parceira.cor : "bg-gray-100 text-gray-800"
   }
@@ -94,7 +107,7 @@ export default function Explorar() {
               disabled={carregando}
               className="flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 disabled:opacity-50"
             >
-              {carregando ? "📍 Localizando..." : " Minha Localização"}
+              {carregando ? "📍 Localizando..." : "📍 Minha Localização"}
             </button>
           </div>
 
@@ -118,7 +131,7 @@ export default function Explorar() {
                 type="text"
                 value={localBusca}
                 onChange={(e) => setLocalBusca(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && buscarItens()}
+                onKeyDown={(e) => e.key === "Enter" && buscarItens()}
                 placeholder="Ex: Pinheiros, Vila Madalena, Jardins..."
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
               />
@@ -143,7 +156,7 @@ export default function Explorar() {
               type="text"
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && buscarItens()}
+              onKeyDown={(e) => e.key === "Enter" && buscarItens()}
               placeholder="Ex: furadeira, móveis, câmera..."
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
             />

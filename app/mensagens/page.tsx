@@ -21,7 +21,7 @@ export default function Mensagens() {
     { id: 5, remetente: "Maria Souza", texto: "Podemos combinar a retirada amanhã?", hora: "10:30", tipo: "recebida" },
   ]
 
-  const enviarMensagem = (e) => {
+     const enviarMensagem = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (mensagem.trim()) {
       setMensagem("")
