@@ -1,0 +1,41 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+/* Quando o modo Vizinho (dark) estiver ativo, transforma TUDO em preto */
+.dark body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.dark .bg-gray-50, 
+.dark .bg-white, 
+.dark .bg-emerald-50, 
+.dark .bg-blue-50, 
+.dark .bg-gray-100 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #333333 !important;
+}
+
+.dark .text-gray-900, 
+.dark .text-gray-800, 
+.dark .text-gray-700 {
+  color: #ffffff !important;
+}
+
+.dark .text-gray-600, 
+.dark .text-gray-500 {
+  color: #d1d5db !important;
+}
+
+.dark .border, 
+.dark .border-gray-200, 
+.dark .border-gray-300 {
+  border-color: #333333 !important;
+}
